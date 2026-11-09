@@ -1,1 +1,59 @@
-<p>conta works!</p>
+<section class="conta-container">
+  <header class="conta-header">
+    <div>
+      <h2>Contas</h2>
+      <span>{{ totalContas() }} cadastradas</span>
+    </div>
+
+    <button type="button" class="btn-nova" (click)="novaConta()" aria-label="Nova conta">
+      <span class="icone">＋</span>
+      Nova conta
+    </button>
+  </header>
+
+  <div class="conta-content">
+    <aside class="lista-contas">
+      <h3>Lista</h3>
+
+      <ul>
+        <li
+          *ngFor="let conta of contas()"
+          [class.selected]="contaSelecionada()?.id === conta.id"
+          (click)="selecionarConta(conta)"
+          tabindex="0"
+          (keydown.enter)="selecionarConta(conta)"
+          (keydown.space)="selecionarConta(conta)"
+        >
+          {{ conta.descricao }}
+        </li>
+      </ul>
+    </aside>
+
+    <main class="detalhe-conta" *ngIf="modoDetalhe()">
+      <h3>{{ contaSelecionada() ? 'Detalhes da conta' : 'Nova conta' }}</h3>
+
+      <form [formGroup]="form" (ngSubmit)="salvar()">
+        <div class="campo">
+          <label for="descricao">Descrição</label>
+          <textarea id="descricao" formControlName="descricao" rows="4"></textarea>
+          <small *ngIf="form.controls.descricao.invalid && form.controls.descricao.touched">
+            Informe uma descrição com pelo menos 2 caracteres.
+          </small>
+        </div>
+
+        <div class="acoes">
+          <button type="submit" class="btn-primary">Salvar</button>
+          <button type="button" class="btn-secondary" (click)="cancelar()">Cancelar</button>
+          <button
+            *ngIf="contaSelecionada()?.id"
+            type="button"
+            class="btn-danger"
+            (click)="excluir()"
+          >
+            Excluir
+          </button>
+        </div>
+      </form>
+    </main>
+  </div>
+</section>
